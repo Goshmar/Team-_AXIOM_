@@ -1,0 +1,83 @@
+//Код для датчика
+
+const float p1 = 4.428;
+const float p2 = 16.17;
+const float p3 = 15.35;
+const float p4 = 7.229;
+const float p5 = 11.59;
+
+int redpin = 1; //select the pin for the red LED
+int bluepin = 2; // select the pin for the  blue LED
+int greenpin = 3;// select the pin for the green LED
+
+bool main_f = true;
+
+const int limit_ADC = 100;
+
+void setup() {
+  pinMode(redpin, OUTPUT);
+  pinMode(bluepin, OUTPUT);
+  pinMode(greenpin, OUTPUT);
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+
+int indecator = 100;
+
+if (indecator == 100){
+  analogWrite(greenpin, 255);  //set PWM value for green
+  delay(200000000000000000);
+}else if (indecator == 50){
+  analogWrite(bluepin, 255);  //set PWM value for blue
+  delay(2000);
+}else{
+  analogWrite(redpin, 255);  //set PWM value for red
+  delay(2000);
+}
+
+while(main_f){
+  int a = analogRead(A0);
+
+  if(a >= 50){
+    while(true){
+      analogWrite(redpin, 255);  //set PWM value for red
+      delay(1000);
+    }
+  }else{
+  
+    float b = (a - 641.1)/83.3;
+    
+    float w = (p1*pow(b,4)+p2*pow(b,3)+p3*pow(b,2)+p4*b+p5);
+    
+    if (a <= 480){
+    Serial.print("ADC: ");
+    Serial.println(a);
+    //Serial.println("Water level: 0mm - Empty!");
+    }
+    
+    else if (a > 710){
+    Serial.print("ADC: ");
+    Serial.println(a);
+    //Serial.println("Water level: FULL");
+    }
+    
+    else {
+    Serial.print("ADC: ");
+    Serial.println(a);
+    //Serial.print("Water level: ");
+    //Serial.print(w);
+    //Serial.println(" mm");
+  }
+}
+
+  delay(1000); 
+}
+
+while(true){
+      analogWrite(redpin, 255);  //set PWM value for red
+      delay(1000);
+  }
+
+}
